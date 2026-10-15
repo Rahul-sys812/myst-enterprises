@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiX } from 'react-icons/fi';
 import { BsPersonPlusFill, BsCheckCircleFill } from 'react-icons/bs';
 import { ClientRecord, ClientStatus } from '@/types';
@@ -49,11 +50,44 @@ export const AddClientModal: React.FC<AddClientModalProps> = React.memo(({
     onClose();
   }, [name, business, work, amount, status, phone, email, address, notes, autoInvoice, onClientAdded, onClose]);
 
-  if (!isOpen) return null;
+  // Lock body scroll when modal is open
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[92dvh] sm:max-h-[90vh] my-auto">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          key="add-client-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 overflow-y-auto"
+          onClick={onClose}
+        >
+          <motion.div
+            key="add-client-card"
+            initial={{ opacity: 0, scale: 0.85, y: 35 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 20, transition: { duration: 0.22, ease: 'easeIn' } }}
+            transition={{
+              type: 'spring',
+              damping: 24,
+              stiffness: 260,
+              mass: 0.85,
+            }}
+            className="relative w-full max-w-lg bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[92dvh] sm:max-h-[90vh] my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
         {/* Header */}
         <div className="bg-[#064e3b] text-white px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between shrink-0 border-b border-emerald-800/40">
           <div className="flex items-center gap-2">
@@ -246,8 +280,10 @@ export const AddClientModal: React.FC<AddClientModalProps> = React.memo(({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
 

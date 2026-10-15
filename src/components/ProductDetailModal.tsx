@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiX } from 'react-icons/fi';
 import { BsCheck2, BsClockHistory } from 'react-icons/bs';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -17,11 +18,44 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = React.memo(
   product,
   onClose
 }) => {
-  if (!product) return null;
+  // Lock body scroll when modal is open
+  React.useEffect(() => {
+    if (product) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [product]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col md:flex-row max-h-[92dvh] sm:max-h-[90vh] my-auto">
+    <AnimatePresence>
+      {product && (
+        <motion.div
+          key="product-modal-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 overflow-y-auto"
+          onClick={onClose}
+        >
+          <motion.div
+            key={`product-modal-card-${product.id}`}
+            initial={{ opacity: 0, scale: 0.85, y: 35 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 20, transition: { duration: 0.22, ease: 'easeIn' } }}
+            transition={{
+              type: 'spring',
+              damping: 24,
+              stiffness: 260,
+              mass: 0.85,
+            }}
+            className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col md:flex-row max-h-[92dvh] sm:max-h-[90vh] my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
         <button
           onClick={onClose}
           className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 transition cursor-pointer"
@@ -105,8 +139,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = React.memo(
             </button>
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
 

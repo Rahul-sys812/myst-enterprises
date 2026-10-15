@@ -458,7 +458,7 @@ function InvoiceFormContent() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Rahul Sharma"
+                  placeholder="Enter your full name..."
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   className="w-full text-xs sm:text-sm font-medium rounded-xl border border-gray-300 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
@@ -472,7 +472,7 @@ function InvoiceFormContent() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Sharma Cafe &amp; Bakers"
+                  placeholder="Enter your business / brand name..."
                   value={clientBusiness}
                   onChange={(e) => setClientBusiness(e.target.value)}
                   className="w-full text-xs sm:text-sm font-medium rounded-xl border border-gray-300 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
@@ -486,7 +486,7 @@ function InvoiceFormContent() {
                 <input
                   type="tel"
                   required
-                  placeholder="e.g. +91 96676 65892"
+                  placeholder="Enter your phone number..."
                   value={clientPhone}
                   onChange={(e) => setClientPhone(e.target.value)}
                   className="w-full text-xs sm:text-sm font-medium rounded-xl border border-gray-300 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
@@ -499,7 +499,7 @@ function InvoiceFormContent() {
                 </label>
                 <input
                   type="email"
-                  placeholder="e.g. rahulcafe@gmail.com"
+                  placeholder="Enter your email address..."
                   value={clientEmail}
                   onChange={(e) => setClientEmail(e.target.value)}
                   className="w-full text-xs sm:text-sm font-medium rounded-xl border border-gray-300 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
@@ -513,7 +513,7 @@ function InvoiceFormContent() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Near Clock Tower, Sirsa, Haryana 125055"
+                  placeholder="Enter your billing address..."
                   value={clientAddress}
                   onChange={(e) => setClientAddress(e.target.value)}
                   className="w-full text-xs sm:text-sm font-medium rounded-xl border border-gray-300 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"

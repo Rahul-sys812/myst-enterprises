@@ -1,17 +1,45 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { FaWhatsapp, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import { BsShieldCheck, BsStars } from 'react-icons/bs';
 import { DEFAULT_SETTINGS } from '@/lib/storage';
 
 export const Footer: React.FC = React.memo(() => {
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.to('.gsap-footer-whatsapp', {
+        scale: 1.05,
+        repeat: -1,
+        yoyo: true,
+        duration: 1.5,
+        ease: 'sine.inOut',
+      });
+      gsap.to('.gsap-footer-shield', {
+        rotate: 10,
+        repeat: -1,
+        yoyo: true,
+        duration: 2,
+        ease: 'power1.inOut',
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
     <footer className="bg-[#050b08] text-gray-300 pt-16 pb-12 border-t border-emerald-950/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-gray-800/80">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-gray-800/80"
+        >
           {/* Col 1 & 2: Brand Information */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block group">
@@ -33,7 +61,7 @@ export const Footer: React.FC = React.memo(() => {
 
             <div className="flex flex-wrap items-center gap-2 pt-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800/50">
-                <BsShieldCheck className="w-3.5 h-3.5 text-lime-400" />
+                <BsShieldCheck className="w-3.5 h-3.5 text-lime-400 gsap-footer-shield" />
                 100% Original Vector Copyright
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-950/60 text-amber-300 border border-amber-800/40">
@@ -158,7 +186,7 @@ export const Footer: React.FC = React.memo(() => {
                   href="https://wa.me/919667665892?text=Hi%20MYST%20Enterprises"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0f7a6e] text-white text-xs font-bold transition shadow-md hover:scale-105 active:scale-95"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0f7a6e] text-white text-xs font-bold transition shadow-md hover:scale-105 active:scale-95 gsap-footer-whatsapp"
                 >
                   <FaWhatsapp className="w-4 h-4 text-white" />
                   <span>Instant WhatsApp Chat</span>
@@ -166,7 +194,7 @@ export const Footer: React.FC = React.memo(() => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">

@@ -1,16 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { FaWhatsapp, FaPhoneAlt } from 'react-icons/fa';
 
 export const FloatingActions: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const ctx = gsap.context(() => {
+        gsap.to('.gsap-float-btn', {
+          y: -5,
+          repeat: -1,
+          yoyo: true,
+          duration: 1.8,
+          ease: 'sine.inOut',
+          stagger: 0.25,
+        });
+      }, containerRef);
+      return () => ctx.revert();
+    }
+  }, []);
+
   const phoneNumber = '+919667665892';
   const whatsappUrl = `https://wa.me/919667665892?text=${encodeURIComponent('Hello MYST Enterprises! I need graphic design & branding services for my business.')}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-center gap-3 print:hidden">
+    <motion.div
+      ref={containerRef}
+      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.5 }}
+      className="fixed bottom-6 right-6 z-40 flex flex-col items-center gap-3 print:hidden"
+    >
       {/* 1. Phone Call Floating Button */}
-      <div className="relative group">
+      <div className="relative group gsap-float-btn">
         <a
           href={`tel:${phoneNumber}`}
           className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#064e3b] via-[#047857] to-[#0f766e] text-white shadow-xl shadow-black/25 hover:shadow-emerald-600/40 border-2 border-white/90 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer"
@@ -29,7 +55,7 @@ export const FloatingActions: React.FC = () => {
       </div>
 
       {/* 2. WhatsApp Floating Button with Glowing Pulse */}
-      <div className="relative group">
+      <div className="relative group gsap-float-btn">
         <a
           href={whatsappUrl}
           target="_blank"
@@ -55,6 +81,6 @@ export const FloatingActions: React.FC = () => {
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

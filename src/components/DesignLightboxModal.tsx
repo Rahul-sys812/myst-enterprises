@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiCopy, FiExternalLink } from 'react-icons/fi';
 import { BsCheck2, BsStarFill } from 'react-icons/bs';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -33,17 +34,44 @@ export const DesignLightboxModal: React.FC<DesignLightboxModalProps> = React.mem
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  if (!design) return null;
+  // Lock body scroll when modal is open
+  React.useEffect(() => {
+    if (design) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [design]);
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-5 animate-in fade-in duration-200"
-      onClick={onClose}
-    >
-      <div 
-        className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[94vh]"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {design && (
+        <motion.div 
+          key="design-lightbox-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-5"
+          onClick={onClose}
+        >
+          <motion.div 
+            key={`design-lightbox-card-${design.id}`}
+            initial={{ opacity: 0, scale: 0.84, y: 36 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 24, transition: { duration: 0.22, ease: 'easeIn' } }}
+            transition={{
+              type: 'spring',
+              damping: 24,
+              stiffness: 260,
+              mass: 0.85,
+            }}
+            className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[94vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
         <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
           {design.image && (
             <a
@@ -72,7 +100,12 @@ export const DesignLightboxModal: React.FC<DesignLightboxModalProps> = React.mem
             <div className="absolute inset-0 bg-radial from-white/10 to-transparent opacity-40 pointer-events-none" />
             
             {design.image ? (
-              <div className="relative w-full h-full flex items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.94 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.08, ease: 'easeOut' }}
+                className="relative w-full h-full flex items-center justify-center"
+              >
                 <Image
                   src={design.image}
                   alt={design.title}
@@ -81,7 +114,7 @@ export const DesignLightboxModal: React.FC<DesignLightboxModalProps> = React.mem
                   className="object-contain p-2 sm:p-4 drop-shadow-2xl"
                   priority
                 />
-              </div>
+              </motion.div>
             ) : (
               <div className="transform scale-125 transition-transform hover:scale-130 duration-300">
                 <LogoGraphic type={design.logoType || 'sharma-cafe'} className="max-w-xs" />
@@ -94,7 +127,12 @@ export const DesignLightboxModal: React.FC<DesignLightboxModalProps> = React.mem
           </div>
 
           {/* Details Content */}
-          <div className="p-6 sm:p-8 space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.12, ease: 'easeOut' }}
+            className="p-6 sm:p-8 space-y-6"
+          >
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest">
@@ -205,10 +243,12 @@ export const DesignLightboxModal: React.FC<DesignLightboxModalProps> = React.mem
                 Book Similar {design.category} on WhatsApp
               </a>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
 

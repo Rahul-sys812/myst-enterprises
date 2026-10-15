@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { FaWhatsapp } from 'react-icons/fa';
 import { BsStars, BsBagCheck } from 'react-icons/bs';
 import { FiSearch } from 'react-icons/fi';
@@ -31,6 +33,17 @@ export default function ProductsPage() {
       item.category.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.product-card-item',
+        { opacity: 0, y: 20, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.04, ease: 'power2.out' }
+      );
+    });
+    return () => ctx.revert();
+  }, [activeCategory, searchQuery]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fafaf9]">
@@ -69,7 +82,7 @@ export default function ProductsPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products..."
+                placeholder="Enter service or product name..."
                 className="w-full text-xs rounded-xl border border-gray-300 pl-10 pr-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               />
             </div>
@@ -80,9 +93,11 @@ export default function ProductsPage() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map((prod) => (
-              <div
+              <motion.div
                 key={prod.id}
-                className="group bg-white rounded-2xl overflow-hidden border border-gray-200/90 hover:border-emerald-400 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.2 }}
+                className="product-card-item group bg-white rounded-2xl overflow-hidden border border-gray-200/90 hover:border-emerald-400 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                   {/* Mockup Card Image with Quick Preview overlay - Unclipped */}
                   <div
@@ -155,7 +170,7 @@ export default function ProductsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -172,7 +187,13 @@ export default function ProductsPage() {
           )}
 
           {/* ================= BEST CTA WITH BACKGROUND IMAGE ================= */}
-          <div className="relative overflow-hidden mt-16 rounded-3xl p-8 sm:p-12 text-white shadow-2xl border border-emerald-500/30">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative overflow-hidden mt-16 rounded-3xl p-8 sm:p-12 text-white shadow-2xl border border-emerald-500/30"
+          >
             {/* Background Image with Dark Vignette */}
             <div className="absolute inset-0 z-0">
               <Image
@@ -208,7 +229,7 @@ export default function ProductsPage() {
                 <span>WhatsApp Direct Inquiry</span>
               </a>
             </div>
-          </div>
+          </motion.div>
         </section>
       </main>
 

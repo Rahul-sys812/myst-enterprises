@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
 import { FaWhatsapp, FaTrashAlt } from 'react-icons/fa';
 import { BsBagCheck, BsShieldCheck } from 'react-icons/bs';
 import { HiArrowRight } from 'react-icons/hi2';
@@ -33,7 +35,21 @@ export default function CartPage() {
 
   useEffect(() => {
     window.addEventListener('myst_cart_updated', refreshCart);
-    return () => window.removeEventListener('myst_cart_updated', refreshCart);
+
+    const ctx = gsap.context(() => {
+      gsap.to('.gsap-cart-whatsapp', {
+        scale: 1.03,
+        repeat: -1,
+        yoyo: true,
+        duration: 1.5,
+        ease: 'sine.inOut',
+      });
+    });
+
+    return () => {
+      window.removeEventListener('myst_cart_updated', refreshCart);
+      ctx.revert();
+    };
   }, []);
 
   const { subtotal, count } = getCartTotal(cartItems);
@@ -114,8 +130,13 @@ export default function CartPage() {
               {/* Left Column: Cart Items List (8 cols) */}
               <div className="lg:col-span-8 space-y-4">
                 {cartItems.map((item) => (
-                  <div
+                  <motion.div
                     key={item.id}
+                    layout
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
                     className="bg-white rounded-2xl border border-gray-200/90 p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 sm:gap-6 group"
                   >
                     {/* Item Image & Title */}
@@ -185,7 +206,7 @@ export default function CartPage() {
                         <FaTrashAlt className="w-4 h-4" />
                       </button>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
 
                 {/* Trust Feature Card */}
@@ -233,7 +254,7 @@ export default function CartPage() {
                       href={`https://wa.me/919667665892?text=${generateWhatsAppOrderText()}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#25D366] via-[#20ba59] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0f7a6e] text-white font-black text-sm sm:text-base px-6 py-4 rounded-2xl shadow-xl shadow-green-950/20 hover:shadow-green-500/40 transition-all duration-200 hover:scale-[1.02] active:scale-95 text-center cursor-pointer"
+                      className="w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#25D366] via-[#20ba59] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0f7a6e] text-white font-black text-sm sm:text-base px-6 py-4 rounded-2xl shadow-xl shadow-green-950/20 hover:shadow-green-500/40 transition-all duration-200 hover:scale-[1.02] active:scale-95 text-center cursor-pointer gsap-cart-whatsapp"
                     >
                       <FaWhatsapp className="w-5 h-5 text-white shrink-0" />
                       <span>Order Instantly on WhatsApp</span>

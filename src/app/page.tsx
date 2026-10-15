@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import {
   BsStars,
   BsShieldCheck,
@@ -46,6 +48,16 @@ export default function HomePage() {
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      gsap.fromTo(
+        '.gsap-floating-stat',
+        { y: 0 },
+        { y: -6, duration: 2.2, repeat: -1, yoyo: true, ease: 'sine.inOut', stagger: 0.25 }
+      );
+    }
+  }, []);
+
   const featuredDesigns = React.useMemo(() => DESIGNS_PROJECTS.slice(0, 8), []);
   const featuredProducts = React.useMemo(() => PRODUCTS_DATA.slice(0, 8), []);
   const featuredPackages = React.useMemo(() => BUSINESS_PACKAGES.slice(0, 6), []);
@@ -68,7 +80,13 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
               {/* Left Column: Story & Authority */}
-              <div className="lg:col-span-7 space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                className="lg:col-span-7 space-y-6"
+              >
                 <div>
                   <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200/80 text-xs font-bold uppercase tracking-wider shadow-sm">
                     <BsStars className="w-3.5 h-3.5 text-emerald-700" />
@@ -145,10 +163,16 @@ export default function HomePage() {
                     <span>Chat With Designer</span>
                   </a>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Right Column: Visual Composite Card */}
-              <div className="lg:col-span-5 relative">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.65, ease: 'easeOut' }}
+                className="lg:col-span-5 relative"
+              >
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200 bg-stone-950 aspect-[4/3] sm:aspect-square">
                   <Image
                     src="/images/hero-laptop.jpg"
@@ -160,21 +184,21 @@ export default function HomePage() {
 
                   {/* Floating Stats Badges with React Icons */}
                   <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between gap-3 text-white">
-                    <div className="bg-black/75 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
+                    <div className="gsap-floating-stat bg-black/75 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
                       <p className="text-2xl font-black text-lime-400">1,000+</p>
                       <p className="text-[11px] text-gray-300 flex items-center gap-1 mt-0.5">
                         <BsPatchCheckFill className="w-3 h-3 text-lime-400" />
                         Brands Launched
                       </p>
                     </div>
-                    <div className="bg-black/75 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
+                    <div className="gsap-floating-stat bg-black/75 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
                       <p className="text-2xl font-black text-amber-400 flex items-center gap-1">
                         4.9
                         <BsStarFill className="w-3.5 h-3.5 text-amber-400" />
                       </p>
                       <p className="text-[11px] text-gray-300 mt-0.5">Client Feedback</p>
                     </div>
-                    <div className="bg-black/75 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
+                    <div className="gsap-floating-stat bg-black/75 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
                       <p className="text-2xl font-black text-emerald-400">100%</p>
                       <p className="text-[11px] text-gray-300 flex items-center gap-1 mt-0.5">
                         <BsShieldCheck className="w-3 h-3 text-emerald-400" />
@@ -183,7 +207,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -191,7 +215,13 @@ export default function HomePage() {
         {/* ================= TRENDING DESIGNS SHOWCASE ================= */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="flex flex-col md:flex-row md:items-end justify-between mb-12"
+            >
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-emerald-800 flex items-center gap-1.5">
                   <BsStars className="w-3.5 h-3.5 text-emerald-700" />
@@ -214,10 +244,16 @@ export default function HomePage() {
                   <HiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
             {/* Grid of 8 Design Cards with UNCLIPPED object-contain preview */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+            >
               {featuredDesigns.map((design) => (
                 <div
                   key={design.id}
@@ -261,14 +297,20 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* ================= FULL-SERVICE CATALOG ================= */}
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-14">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="text-center max-w-2xl mx-auto mb-14"
+            >
               <span className="text-xs font-bold uppercase tracking-widest text-emerald-800">
                 Full-Service Catalog
               </span>
@@ -278,10 +320,16 @@ export default function HomePage() {
               <p className="text-sm text-gray-600 mt-2">
                 From vector logos and luxury business cards to multi-page restaurant menus and retail packaging boxes.
               </p>
-            </div>
+            </motion.div>
 
             {/* Grid of Product Cards with UNCLIPPED Image Presentation */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
               {featuredProducts.map((prod) => (
                 <div
                   key={prod.id}
@@ -337,7 +385,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </motion.div>
 
             <div className="text-center mt-12">
               <Link
@@ -354,7 +402,13 @@ export default function HomePage() {
         {/* ================= NEW BUSINESS STARTER BUNDLES ================= */}
         <section className="py-20 bg-gray-900 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="flex flex-col md:flex-row md:items-end justify-between mb-12"
+            >
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-lime-400">
                   Ready Industry Bundles
@@ -375,9 +429,15 @@ export default function HomePage() {
                   Explore All Packages <HiArrowRight className="w-4 h-4" />
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
               {featuredPackages.map((pkg) => (
                 <div
                   key={pkg.id}
@@ -421,7 +481,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -444,7 +504,13 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#03150e] via-transparent via-50% to-[#03150e]/80" />
           </div>
 
-          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8"
+          >
             {/* Gold Accent Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-emerald-300 text-xs font-black uppercase tracking-widest shadow-2xl backdrop-blur-md">
               <BsStars className="w-4 h-4 text-lime-400" />
@@ -506,7 +572,7 @@ export default function HomePage() {
                 <span className="font-semibold">Unlimited Design Revisions</span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </section>
       </main>
 

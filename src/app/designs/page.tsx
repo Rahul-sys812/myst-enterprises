@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { DESIGNS_PROJECTS } from '@/data/mockData';
@@ -64,6 +66,17 @@ export default function DesignsPage() {
     });
   }, [activeTab, searchQuery]);
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.design-grid-item',
+        { opacity: 0, scale: 0.94, y: 15 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.35, stagger: 0.03, ease: 'power2.out' }
+      );
+    });
+    return () => ctx.revert();
+  }, [activeTab, searchQuery]);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#fafaf9]">
       <Navbar />
@@ -101,7 +114,7 @@ export default function DesignsPage() {
               <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by brand, food, cafe, gym, packaging, keyword..."
+                placeholder="Enter design name, category or brand..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-9 py-2 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
@@ -137,10 +150,12 @@ export default function DesignsPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {filteredDesigns.map((design) => (
-              <div
+              <motion.div
                 key={design.id}
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => setSelectedDesign(design)}
-                className={`group relative aspect-square rounded-3xl overflow-hidden cursor-pointer shadow-xs hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 bg-gradient-to-br ${design.bgGradient} border border-gray-200/60 flex items-center justify-center p-3 sm:p-4`}
+                className={`design-grid-item group relative aspect-square rounded-3xl overflow-hidden cursor-pointer shadow-xs hover:shadow-2xl transition-all duration-300 bg-gradient-to-br ${design.bgGradient} border border-gray-200/60 flex items-center justify-center p-3 sm:p-4`}
               >
                 {/* Visual: Real Design Image or Vector Brand Logo graphic - Unclipped */}
                 {design.image ? (
@@ -179,7 +194,7 @@ export default function DesignsPage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 

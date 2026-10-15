@@ -1,6 +1,20 @@
 User-agent: *
 Allow: /
 Disallow: /dashboard/
+Disallow: /login/
+Disallow: /cart/
+Disallow: /checkout/
 Disallow: /get-invoice/
+Disallow: /api/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /get-invoice/
+Disallow: /api/
 
 Sitemap: https://mystenterprises.in/sitemap.xml
+Host: https://mystenterprises.in

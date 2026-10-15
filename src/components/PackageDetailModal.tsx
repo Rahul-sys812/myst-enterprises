@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiX } from 'react-icons/fi';
 import { BsCheck2, BsClockHistory, BsShieldCheck, BsStars } from 'react-icons/bs';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -44,11 +45,44 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = React.memo(
     );
   }, []);
 
-  if (!pkg) return null;
+  // Lock body scroll when modal is open
+  React.useEffect(() => {
+    if (pkg) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [pkg]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[92dvh] sm:max-h-[92vh] my-auto">
+    <AnimatePresence>
+      {pkg && (
+        <motion.div
+          key="pkg-modal-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 overflow-y-auto"
+          onClick={onClose}
+        >
+          <motion.div
+            key={`pkg-modal-card-${pkg.id}`}
+            initial={{ opacity: 0, scale: 0.85, y: 35 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 20, transition: { duration: 0.22, ease: 'easeIn' } }}
+            transition={{
+              type: 'spring',
+              damping: 24,
+              stiffness: 260,
+              mass: 0.85,
+            }}
+            className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[92dvh] sm:max-h-[92vh] my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full p-2 transition"
@@ -162,8 +196,10 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = React.memo(
             </div>
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
 

@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { BUSINESS_PACKAGES } from '@/data/mockData';
@@ -37,6 +39,17 @@ export default function NewBusinessPage() {
     return pkg.category === activeTab;
   });
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.business-package-card',
+        { opacity: 0, y: 25, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.05, ease: 'power2.out' }
+      );
+    });
+    return () => ctx.revert();
+  }, [activeTab]);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#fafaf9]">
       <Navbar />
@@ -69,10 +82,12 @@ export default function NewBusinessPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {filteredPackages.map((pkg) => (
-              <div
+              <motion.div
                 key={pkg.id}
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => setSelectedPackage(pkg)}
-                className="group bg-white rounded-3xl overflow-hidden border border-gray-200/90 hover:border-emerald-500 shadow-xs hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                className="business-package-card group bg-white rounded-3xl overflow-hidden border border-gray-200/90 hover:border-emerald-500 shadow-xs hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
               >
                 {/* Photo Mockup */}
                 <div className="relative aspect-[4/3] bg-gray-900 overflow-hidden">
@@ -140,12 +155,18 @@ export default function NewBusinessPage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* ================= BEST CTA WITH BACKGROUND IMAGE ================= */}
-          <div className="relative overflow-hidden mt-16 rounded-3xl p-8 sm:p-12 text-white shadow-2xl border border-emerald-500/30">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative overflow-hidden mt-16 rounded-3xl p-8 sm:p-12 text-white shadow-2xl border border-emerald-500/30"
+          >
             {/* Background Image with Dark Vignette */}
             <div className="absolute inset-0 z-0">
               <Image
@@ -181,7 +202,7 @@ export default function NewBusinessPage() {
                 <span>Get Custom Startup Package</span>
               </a>
             </div>
-          </div>
+          </motion.div>
         </section>
       </main>
 

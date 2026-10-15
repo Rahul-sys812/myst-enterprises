@@ -1,7 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { BsShieldCheck, BsAward, BsClockHistory, BsStars, BsCheckCircleFill } from 'react-icons/bs';
@@ -11,6 +13,19 @@ import { HiArrowRight } from 'react-icons/hi2';
 import { PageHeroBanner } from '@/components/PageHeroBanner';
 
 export default function AboutPage() {
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.to('.gsap-about-stat', {
+        y: -4,
+        repeat: -1,
+        yoyo: true,
+        duration: 2,
+        stagger: 0.2,
+        ease: 'sine.inOut',
+      });
+    });
+    return () => ctx.revert();
+  }, []);
   return (
     <div className="min-h-screen flex flex-col bg-[#fafaf9]">
       <Navbar />
@@ -25,7 +40,13 @@ export default function AboutPage() {
 
         {/* Studio Story & Values - Concise & Crisp */}
         <section id="philosophy" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 scroll-mt-32">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+          >
             <div className="lg:col-span-6 relative">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-xl relative border border-gray-200">
                 <Image
@@ -63,25 +84,25 @@ export default function AboutPage() {
               </div>
 
               <div id="metrics" className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 scroll-mt-32">
-                <div className="space-y-1">
+                <div className="space-y-1 gsap-about-stat bg-stone-50 p-3 rounded-2xl border border-gray-150">
                   <div className="text-3xl font-black text-[#064e3b]">1,000+</div>
                   <div className="text-xs text-gray-500 font-semibold">Brands Launched</div>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 gsap-about-stat bg-stone-50 p-3 rounded-2xl border border-gray-150">
                   <div className="text-3xl font-black text-[#84cc16]">24-48h</div>
                   <div className="text-xs text-gray-500 font-semibold">Average Turnaround</div>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 gsap-about-stat bg-stone-50 p-3 rounded-2xl border border-gray-150">
                   <div className="text-3xl font-black text-teal-700">100%</div>
                   <div className="text-xs text-gray-500 font-semibold">Vector Copyright</div>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1 gsap-about-stat bg-stone-50 p-3 rounded-2xl border border-gray-150">
                   <div className="text-3xl font-black text-amber-600">4.9 / 5</div>
                   <div className="text-xs text-gray-500 font-semibold">Client Satisfaction</div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </section>
 
         {/* Values Cards */}
@@ -94,36 +115,42 @@ export default function AboutPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
+              <motion.div whileHover={{ y: -6 }} className="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
                 <BsShieldCheck className="w-8 h-8 text-emerald-700" />
                 <h4 className="font-serif text-lg font-bold text-gray-900">Direct Copyright Handover</h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
                   You receive full commercial and trademark rights to your designs, complete with master vector formats.
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
+              <motion.div whileHover={{ y: -6 }} className="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
                 <BsAward className="w-8 h-8 text-amber-600" />
                 <h4 className="font-serif text-lg font-bold text-gray-900">Print-Production Ready</h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
                   No printing press headaches. We configure exact dielines, CMYK profiles, bleed lines and spot UV layers.
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
+              <motion.div whileHover={{ y: -6 }} className="p-6 rounded-2xl bg-gray-50 border border-gray-100 space-y-3">
                 <BsClockHistory className="w-8 h-8 text-teal-600" />
                 <h4 className="font-serif text-lg font-bold text-gray-900">Dedicated Account Manager</h4>
                 <p className="text-xs text-gray-600 leading-relaxed">
                   Real human designers responding within minutes via WhatsApp and email, ensuring smooth revisions.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
         {/* Luxury CTA Section with Background Image */}
         <section className="relative mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20"
+          >
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
               <Image
@@ -183,7 +210,7 @@ export default function AboutPage() {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </section>
       </main>
 

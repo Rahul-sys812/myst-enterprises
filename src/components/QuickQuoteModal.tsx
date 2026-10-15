@@ -69,17 +69,44 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = React.memo(({
     onClose();
   }, [businessName, industry, currentService, expressDelivery, calculatedTotal, onClose]);
 
-  if (!isOpen) return null;
+  // Lock body scroll when modal is open
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-md overflow-y-auto">
+      {isOpen && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-xl bg-gradient-to-b from-[#0c1813] to-[#060d09] border border-emerald-500/40 rounded-2xl sm:rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] text-white overflow-hidden flex flex-col max-h-[92dvh] sm:max-h-[90vh] my-auto"
+          key="quick-quote-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto"
+          onClick={onClose}
         >
+          <motion.div
+            key="quick-quote-card"
+            initial={{ opacity: 0, scale: 0.85, y: 35 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 20, transition: { duration: 0.22, ease: 'easeIn' } }}
+            transition={{
+              type: 'spring',
+              damping: 24,
+              stiffness: 260,
+              mass: 0.85,
+            }}
+            className="relative w-full max-w-xl bg-gradient-to-b from-[#0c1813] to-[#060d09] border border-emerald-500/40 rounded-2xl sm:rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.8)] text-white overflow-hidden flex flex-col max-h-[92dvh] sm:max-h-[90vh] my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
           {/* Top Banner Accent */}
           <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-lime-400 to-amber-400 shrink-0" />
 
@@ -146,7 +173,7 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = React.memo(({
                     type="text"
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
-                    placeholder="e.g. Sharma Cafe, Luxe Decor"
+                    placeholder="Enter your brand / business name..."
                     className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-sm text-white placeholder-gray-500 focus:outline-hidden focus:border-lime-400"
                   />
                 </div>
@@ -214,7 +241,8 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = React.memo(({
             </form>
           </div>
         </motion.div>
-      </div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 });

@@ -26,11 +26,11 @@ const HERO_SLIDES: HeroSlide[] = [
   {
     id: 0,
     image: '/images/designs/banner-1.webp',
-    alt: 'MYST Enterprises – Luxury Brand Identity, Vector Logos & 3D Packaging Design',
-    badge: 'Commercial Brand Identity Studio',
-    title: 'High-Converting Brand Identities & Packaging',
+    alt: '#1 Graphic Design & Branding Agency India – MYST Enterprises Luxury Brand Identity, Vector Logos & 3D Packaging',
+    badge: "India's #1 Creative Design Studio",
+    title: '#1 Graphic Design & Branding Agency in India',
     description:
-      'Direct AI & EPS vector masters, 3D retail packaging boxes & print-ready marketing masters for modern businesses.',
+      'Direct AI & EPS vector masters, 3D retail packaging boxes, luxury restaurant menus & turnkey brand kits for ambitious businesses.',
     primaryCtaText: 'Explore Portfolio',
     primaryCtaHref: '/designs',
     secondaryCtaType: 'quote',
@@ -39,15 +39,28 @@ const HERO_SLIDES: HeroSlide[] = [
   {
     id: 1,
     image: '/images/designs/banner-2.webp',
-    alt: 'MYST Enterprises – Luxury Corporate Packaging, Merchandise & Gold Foil Business Cards',
-    badge: '24-48h Express Delivery',
-    title: 'Turnkey Branding for Cafes, Restaurants & Retail',
+    alt: 'Turnkey Branding Agency India – Packaging, Merchandise & Gold Foil Business Cards by MYST Enterprises',
+    badge: '24-48h Express Delivery Across India',
+    title: 'Turnkey Branding for Cafes, Restaurants & Startups',
     description:
-      'Luxury dine-in menus, takeaway food packaging, embossed gift boxes & custom corporate merchandise.',
+      'Luxury dine-in menus, takeaway food packaging, embossed gift boxes & custom corporate merchandise delivered fast.',
     primaryCtaText: 'Starter Packages',
     primaryCtaHref: '/new-business',
     secondaryCtaType: 'whatsapp',
     secondaryCtaText: 'Chat on WhatsApp',
+  },
+  {
+    id: 2,
+    image: '/images/designs/banner-3.webp',
+    alt: 'Commercial 3D Product Packaging Design & Retail Box Dielines India – MYST Enterprises',
+    badge: '3D Retail Packaging & Dielines',
+    title: 'Custom Product Packaging & Retail Labels',
+    description:
+      'High-converting box dielines, cosmetics bottle labels, takeaway food pouches & photorealistic 3D renders that dominate retail shelves.',
+    primaryCtaText: 'View Packaging',
+    primaryCtaHref: '/products/packaging-design',
+    secondaryCtaType: 'quote',
+    secondaryCtaText: 'Instant Quote',
   },
 ];
 
@@ -121,7 +134,13 @@ export const HeroBannerSlider: React.FC<HeroBannerSliderProps> = React.memo(({ o
             {/* Responsive Text & Content Overlay */}
             <div className="absolute inset-0 z-10 flex items-center">
               <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 w-full">
-                <div className="max-w-md sm:max-w-xl lg:max-w-2xl space-y-2 sm:space-y-3 lg:space-y-4 text-left">
+                <motion.div
+                  key={`slide-content-${slide.id}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, ease: 'easeOut', delay: 0.12 }}
+                  className="max-w-md sm:max-w-xl lg:max-w-2xl space-y-2 sm:space-y-3 lg:space-y-4 text-left"
+                >
                   {/* Badge */}
                   <div>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-emerald-950/85 border border-emerald-400/40 text-emerald-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md shadow-md">
@@ -170,7 +189,7 @@ export const HeroBannerSlider: React.FC<HeroBannerSliderProps> = React.memo(({ o
                       </a>
                     )}
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>

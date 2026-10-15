@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiPrinter, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { BsCheckCircleFill, BsBuilding } from 'react-icons/bs';
 import { Invoice, InvoiceItem, ClientRecord } from '@/types';
@@ -256,11 +257,44 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = React.memo(({
     window.print();
   }, []);
 
-  if (!isOpen) return null;
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
-      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden my-4 border border-gray-100 flex flex-col max-h-[92vh]">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          key="invoice-modal-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 overflow-y-auto"
+          onClick={onClose}
+        >
+          <motion.div
+            key="invoice-modal-card"
+            initial={{ opacity: 0, scale: 0.85, y: 35 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 20, transition: { duration: 0.22, ease: 'easeIn' } }}
+            transition={{
+              type: 'spring',
+              damping: 24,
+              stiffness: 260,
+              mass: 0.85,
+            }}
+            className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden my-4 border border-gray-100 flex flex-col max-h-[92vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
         {/* Top Action Bar */}
         <div className="bg-[#064e3b] text-white px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -725,8 +759,10 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = React.memo(({
             </button>
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
 

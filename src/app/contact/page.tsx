@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import {
@@ -21,6 +23,19 @@ import { submitToWeb3Forms } from '@/lib/web3forms';
 import { toast } from 'sonner';
 
 export default function ContactPage() {
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.to('.gsap-contact-icon', {
+        y: -3,
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.2,
+        duration: 1.8,
+        ease: 'sine.inOut',
+      });
+    });
+    return () => ctx.revert();
+  }, []);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -74,7 +89,13 @@ export default function ContactPage() {
         <section id="location" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8 relative z-10 scroll-mt-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Contact Information & WhatsApp Box */}
-            <div className="lg:col-span-5 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, x: -25 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-5 space-y-6"
+            >
               <div className="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg space-y-6">
                 <h3 className="font-serif text-2xl font-bold text-gray-900">
                   Studio Headquarters
@@ -82,7 +103,7 @@ export default function ContactPage() {
 
                 <div className="space-y-4 text-xs sm:text-sm text-gray-600">
                   <div className="flex items-start gap-3">
-                    <FaMapMarkerAlt className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                    <FaMapMarkerAlt className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5 gsap-contact-icon" />
                     <div>
                       <strong className="text-gray-900 block">Address</strong>
                       <span>{DEFAULT_SETTINGS.address}</span>
@@ -90,7 +111,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <FaPhoneAlt className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                    <FaPhoneAlt className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5 gsap-contact-icon" />
                     <div>
                       <strong className="text-gray-900 block">Direct Phone &amp; WhatsApp</strong>
                       <span>{DEFAULT_SETTINGS.phone}</span>
@@ -98,7 +119,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <FaEnvelope className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                    <FaEnvelope className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5 gsap-contact-icon" />
                     <div>
                       <strong className="text-gray-900 block">Official Email</strong>
                       <span>{DEFAULT_SETTINGS.email}</span>
@@ -106,7 +127,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <BsClockHistory className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                    <BsClockHistory className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5 gsap-contact-icon" />
                     <div>
                       <strong className="text-gray-900 block">Studio Hours</strong>
                       <span>Mon - Sat: 9:30 AM – 7:30 PM (IST)</span>
@@ -126,10 +147,16 @@ export default function ContactPage() {
                   </a>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Inquiry Form */}
-            <div className="lg:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, x: 25 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-7"
+            >
               <div className="bg-white p-8 sm:p-10 rounded-3xl border border-gray-200 shadow-lg">
                 {submitted ? (
                   <div className="py-12 text-center space-y-4 animate-in fade-in">
@@ -165,7 +192,7 @@ export default function ContactPage() {
                           required
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="e.g. Vikram Rao"
+                          placeholder="Enter your name..."
                           className="w-full text-xs rounded-xl border border-gray-300 px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                         />
                       </div>
@@ -179,7 +206,7 @@ export default function ContactPage() {
                           required
                           value={formData.business}
                           onChange={(e) => setFormData({ ...formData, business: e.target.value })}
-                          placeholder="e.g. The Brew House"
+                          placeholder="Enter your brand / business name..."
                           className="w-full text-xs rounded-xl border border-gray-300 px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                         />
                       </div>
@@ -195,7 +222,7 @@ export default function ContactPage() {
                           required
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+91 96676 65892"
+                          placeholder="Enter your phone number..."
                           className="w-full text-xs rounded-xl border border-gray-300 px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                         />
                       </div>
@@ -209,7 +236,7 @@ export default function ContactPage() {
                           required
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="client@brandname.com"
+                          placeholder="Enter your email address..."
                           className="w-full text-xs rounded-xl border border-gray-300 px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                         />
                       </div>
@@ -242,7 +269,7 @@ export default function ContactPage() {
                         required
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Tell us about your brand aesthetic, preferred colors, deadline, or special instructions..."
+                        placeholder="Enter your project details or vision..."
                         className="w-full text-xs rounded-xl border border-gray-300 p-3.5 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                       />
                     </div>
@@ -267,13 +294,19 @@ export default function ContactPage() {
                   </form>
                 )}
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* ================= INTERACTIVE GOOGLE MAP SECTION ================= */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-lg overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl border border-gray-200 shadow-lg overflow-hidden"
+          >
             {/* Map Header Bar */}
             <div className="p-6 bg-gray-50/80 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -332,7 +365,7 @@ export default function ContactPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </section>
       </main>
 

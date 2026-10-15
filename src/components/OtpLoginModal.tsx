@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiRefreshCw, FiMail, FiArrowLeft, FiShield } from 'react-icons/fi';
 import { BsCheckCircleFill, BsShieldLockFill } from 'react-icons/bs';
 import { HiArrowRight } from 'react-icons/hi2';
@@ -64,7 +65,17 @@ export const OtpLoginModal: React.FC<OtpLoginModalProps> = ({
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   // 1. Handle Digit Change for Login Passcode
   const handleDigitChange = (index: number, val: string) => {
@@ -222,8 +233,31 @@ export const OtpLoginModal: React.FC<OtpLoginModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          key="otp-modal-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+          onClick={onClose}
+        >
+          <motion.div
+            key="otp-modal-card"
+            initial={{ opacity: 0, scale: 0.85, y: 35 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.88, y: 20, transition: { duration: 0.22, ease: 'easeIn' } }}
+            transition={{
+              type: 'spring',
+              damping: 24,
+              stiffness: 260,
+              mass: 0.85,
+            }}
+            className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100"
+            onClick={(e) => e.stopPropagation()}
+          >
         {/* Luxury Green Header Banner */}
         <div className="bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#0f766e] text-white p-6 relative">
           <button
@@ -548,7 +582,9 @@ export const OtpLoginModal: React.FC<OtpLoginModalProps> = ({
             </div>
           )}
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

@@ -1,8 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 
 export interface SubpagePill {
   label: string;
@@ -47,6 +49,34 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
   subpagePills,
   children,
 }) => {
+  const glowRef1 = useRef<HTMLDivElement>(null);
+  const glowRef2 = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (glowRef1.current && glowRef2.current) {
+      const ctx = gsap.context(() => {
+        gsap.to(glowRef1.current, {
+          scale: 1.25,
+          opacity: 0.28,
+          duration: 4.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+        gsap.to(glowRef2.current, {
+          scale: 1.35,
+          x: 20,
+          opacity: 0.22,
+          duration: 5.5,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+      });
+      return () => ctx.revert();
+    }
+  }, []);
+
   return (
     <section className="relative overflow-hidden bg-slate-950 text-white py-12 sm:py-16 lg:py-20 border-b border-emerald-950/60 shadow-xl">
       {/* Background Hero Image */}
@@ -62,9 +92,15 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
         {/* Layered cinematic dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#030706]/94 via-[#051712]/85 to-[#020b08]/96 backdrop-blur-[1px]" />
         
-        {/* Ambient radial lighting glows */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-10 w-[350px] h-[180px] bg-lime-400/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Ambient radial lighting glows with GSAP animations */}
+        <div
+          ref={glowRef1}
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"
+        />
+        <div
+          ref={glowRef2}
+          className="absolute bottom-0 right-10 w-[350px] h-[180px] bg-lime-400/10 rounded-full blur-3xl pointer-events-none"
+        />
       </div>
 
       {/* Grid texture for design studio feel */}
@@ -77,25 +113,45 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
         }}
       />
 
-      {/* Foreground Content - Pinaka Law Associates Style Centered Header */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+      {/* Foreground Content - Centered Header with Framer Motion */}
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3"
+      >
         {/* Optional Subtle Pill Badge */}
         {badgeText && (
-          <div className="inline-block">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="inline-block"
+          >
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/35 text-emerald-300 text-[10px] sm:text-[11px] font-bold shadow-md shadow-emerald-950/40 backdrop-blur-md">
               {badgeIcon}
               <span className="tracking-wide uppercase font-extrabold">{badgeText}</span>
             </span>
-          </div>
+          </motion.div>
         )}
 
         {/* Centered Large Headline */}
-        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight drop-shadow-md">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="font-serif text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight drop-shadow-md"
+        >
           {title}
-        </h1>
+        </motion.h1>
 
-        {/* Centered Pinaka-Style Breadcrumb Navigation: Home » Page */}
-        <div className="flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold tracking-wide pt-1">
+        {/* Centered Breadcrumb Navigation: Home » Page */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold tracking-wide pt-1"
+        >
           <Link
             href="/"
             className="text-lime-400 hover:text-lime-300 transition-colors"
@@ -122,7 +178,7 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
           ) : (
             <span className="text-white font-medium">Page</span>
           )}
-        </div>
+        </motion.div>
 
         {/* Optional Subtitle / Description (Concise) */}
         {description && (
@@ -175,7 +231,7 @@ export const PageHeroBanner: React.FC<PageHeroBannerProps> = ({
 
         {/* Optional Custom Injected Content */}
         {children}
-      </div>
+      </motion.div>
     </section>
   );
 };

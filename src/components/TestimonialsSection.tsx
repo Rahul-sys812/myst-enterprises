@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { BsStars, BsStarFill, BsPatchCheckFill, BsQuote, BsClockHistory } from 'react-icons/bs';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
@@ -122,6 +124,20 @@ export const TestimonialsSection: React.FC = () => {
     };
   }, [isPaused, nextSlide, maxIndex]);
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.to('.gsap-star-icon', {
+        scale: 1.15,
+        stagger: 0.1,
+        repeat: -1,
+        yoyo: true,
+        duration: 1,
+        ease: 'power1.inOut',
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   const totalSteps = maxIndex + 1;
 
   return (
@@ -132,8 +148,14 @@ export const TestimonialsSection: React.FC = () => {
       id="client-testimonials"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 sm:mb-10">
+        {/* Header with Framer Motion */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 sm:mb-10"
+        >
           <div>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200/80 text-[11px] font-bold uppercase tracking-wider shadow-xs">
               <BsStars className="w-3.5 h-3.5 text-emerald-700" />
@@ -145,11 +167,11 @@ export const TestimonialsSection: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 text-xs text-gray-950 font-semibold">
               <div className="flex items-center gap-1">
                 <div className="flex text-amber-400 gap-0.5">
-                  <BsStarFill className="w-3.5 h-3.5" />
-                  <BsStarFill className="w-3.5 h-3.5" />
-                  <BsStarFill className="w-3.5 h-3.5" />
-                  <BsStarFill className="w-3.5 h-3.5" />
-                  <BsStarFill className="w-3.5 h-3.5" />
+                  <BsStarFill className="w-3.5 h-3.5 gsap-star-icon" />
+                  <BsStarFill className="w-3.5 h-3.5 gsap-star-icon" />
+                  <BsStarFill className="w-3.5 h-3.5 gsap-star-icon" />
+                  <BsStarFill className="w-3.5 h-3.5 gsap-star-icon" />
+                  <BsStarFill className="w-3.5 h-3.5 gsap-star-icon" />
                 </div>
                 <span className="font-bold">4.9 / 5</span>
                 <span className="text-gray-500 font-normal">(1,000+ Projects)</span>
@@ -184,7 +206,7 @@ export const TestimonialsSection: React.FC = () => {
               <FiChevronRight className="w-4 h-4" />
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Carousel Slider Window */}
         <div className="relative overflow-hidden -mx-2 sm:-mx-3">

@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
 import { FaWhatsapp } from 'react-icons/fa';
 import {
   BsShieldCheck,
@@ -94,6 +96,19 @@ export default function ProductDetailView() {
     window.open(`https://wa.me/919667665892?text=${whatsappMessage}`, '_blank');
   };
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.to('.gsap-buy-btn', {
+        scale: 1.02,
+        repeat: -1,
+        yoyo: true,
+        duration: 1.5,
+        ease: 'sine.inOut',
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   const whatsappMessage = encodeURIComponent(
     `Hello MYST Enterprises! I want to order the "${product.title}" (${selectedTier.name}) for ₹${calculatedPrice.toLocaleString()}. Please share details!`
   );
@@ -116,8 +131,13 @@ export default function ProductDetailView() {
         <div id="order-selection" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             
-            {/* Left Column: Visual Showcase (5 Cols) */}
-            <div className="lg:col-span-6 space-y-6">
+            {/* Left Column: Visual Showcase (6 Cols) */}
+            <motion.div
+              initial={{ opacity: 0, x: -25 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-6 space-y-6"
+            >
               <div className="relative aspect-[4/3] sm:aspect-square rounded-3xl overflow-hidden border border-gray-200/90 shadow-2xl bg-[#0c1411] flex items-center justify-center p-4 group">
                 <Image
                   src={product.image}
@@ -181,10 +201,15 @@ export default function ProductDetailView() {
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Right Column: Pricing, Tiers & Next-Level Buttons (7 Cols) */}
-            <div className="lg:col-span-6 space-y-6">
+            {/* Right Column: Pricing, Tiers & Next-Level Buttons (6 Cols) */}
+            <motion.div
+              initial={{ opacity: 0, x: 25 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-6 space-y-6"
+            >
               <div>
                 <span className="inline-block text-xs font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-50 px-3.5 py-1 rounded-full border border-emerald-200/60 mb-2">
                   Commercial Product Spec
@@ -308,7 +333,7 @@ export default function ProductDetailView() {
                   <button
                     type="button"
                     onClick={handleBuyNow}
-                    className="relative group overflow-hidden inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#25D366] via-[#20ba59] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0f7a6e] text-white font-black text-sm px-6 py-4 rounded-2xl shadow-xl shadow-green-950/20 hover:shadow-green-500/40 transition-all duration-200 hover:scale-[1.01] active:scale-95 cursor-pointer"
+                    className="gsap-buy-btn relative group overflow-hidden inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#25D366] via-[#20ba59] to-[#128C7E] hover:from-[#20ba59] hover:to-[#0f7a6e] text-white font-black text-sm px-6 py-4 rounded-2xl shadow-xl shadow-green-950/20 hover:shadow-green-500/40 transition-all duration-200 hover:scale-[1.01] active:scale-95 cursor-pointer"
                   >
                     <FaWhatsapp className="w-5 h-5 text-white shrink-0" />
                     <span>Order on WhatsApp</span>
@@ -342,7 +367,7 @@ export default function ProductDetailView() {
                 </div>
               </div>
 
-            </div>
+            </motion.div>
           </div>
         </div>
       </main>
